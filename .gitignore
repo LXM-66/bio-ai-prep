@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+*.egg-info/
+
+# 数据与密钥（不要提交大文件或任何 token）
+*.env
+.env
+*.key
+*.log
+data/raw/
+w1/out/*.fasta
