@@ -30,7 +30,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "llm_client"))
 import store                            # noqa: E402
-from pipeline import INDEX, Engine      # noqa: E402
+from pipeline import Engine      # noqa: E402
 
 EVAL_SET = HERE / "eval_set.jsonl"
 KS = (1, 3, 5, 10)
@@ -113,7 +113,7 @@ def main():
         print("评测集里没有可用问题")
         return 1
 
-    print(f"\n语料 {len(idx.chunks)} 块｜索引 {INDEX.name}｜题目 {len(items)} 道"
+    print(f"\n语料 {len(idx.chunks)} 块｜索引 {eng.index_path.name}｜题目 {len(items)} 道"
           + (f"｜改写花费 {cost:.4f} 元" if cost else "（改写用缓存，未花钱）"))
     results = [("当前：改写 + bigram", evaluate(idx, items, "rewritten", args.topk)),
                ("对照：不改写（中文直查）", evaluate(idx, items, "q", args.topk))]

@@ -23,7 +23,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "llm_client"))
-from pipeline import INDEX, Engine      # noqa: E402
+from pipeline import Engine      # noqa: E402
 
 OUT = HERE / "eval_set.jsonl"
 ASK_SYSTEM = ("你会看到一段生物医药资料。请写一个「只有这段资料能回答」的中文问题，"

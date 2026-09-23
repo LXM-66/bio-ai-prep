@@ -35,7 +35,7 @@ def main():
     ap.add_argument("--out", default="", help="输出路径（默认 rag/reports/<主题>.md）")
     args = ap.parse_args()
 
-    eng = Engine(index_path=HERE / "index" / "bm25.json")
+    eng = Engine()
     if eng.bot_error:
         print(f"需要 API key 才能生成报告：{eng.bot_error}")
         return 1

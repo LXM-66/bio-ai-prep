@@ -31,6 +31,15 @@ def get_engine():
     return Engine()
 
 
+def try_engine():
+    """索引不存在时给一句人话提示，而不是抛一堆栈 —— 第一次用的人多半没建索引。"""
+    try:
+        return get_engine()
+    except FileNotFoundError:
+        st.error("还没建索引。先在项目根目录跑：`python rag/build_index.py`")
+        st.stop()
+
+
 @st.cache_data(ttl=60)
 def get_overview():
     return corpus_overview()
@@ -46,7 +55,7 @@ def usage_total():
     return sum(float(r["cost_cny"]) for r in rows), len(rows)
 
 
-eng = get_engine()
+eng = try_engine()
 ov = get_overview()
 total_cost, calls = usage_total()
 

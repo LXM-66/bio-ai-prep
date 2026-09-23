@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 import time
 import urllib.parse
@@ -25,7 +26,11 @@ from llm import DeepSeek, DeepSeekError, load_env        # noqa: E402
 from query import has_cjk, rewrite_query                 # noqa: E402
 from store import BM25Index                              # noqa: E402
 
-INDEX = HERE / "index" / "bm25.json"
+def default_index() -> Path:
+    """索引路径：默认 rag/index/bm25.json，可用环境变量 BIO_AI_INDEX 覆盖（测试/对比语料用）。"""
+    return Path(os.environ.get("BIO_AI_INDEX") or (HERE / "index" / "bm25.json"))
+
+
 DATA = HERE / "data"
 REPORT_DIR = HERE / "reports"
 
@@ -52,11 +57,12 @@ def build_prompt(question: str, hits: list[tuple[int, float]], idx: BM25Index) -
 class Engine:
     """检索问答引擎。need_bot=False 时只检索、不调用大模型（离线也能用）。"""
 
-    def __init__(self, index_path: Path = INDEX, model: str = "deepseek-flash", need_bot: bool = True):
-        if not Path(index_path).exists():
-            raise FileNotFoundError(f"索引不存在：{index_path}（先跑 python rag/build_index.py）")
-        self.idx = BM25Index.load(index_path)
-        self.index_path = Path(index_path)
+    def __init__(self, index_path: Path | None = None, model: str = "deepseek-flash", need_bot: bool = True):
+        path = Path(index_path) if index_path else default_index()
+        if not path.exists():
+            raise FileNotFoundError(f"索引不存在：{path}（先跑 python rag/build_index.py）")
+        self.idx = BM25Index.load(path)
+        self.index_path = path
         self.bot = None
         self.bot_error = ""
         if need_bot:
