@@ -1,9 +1,9 @@
 """读取 FASTA 文件，输出每条序列的长度与 GC 含量。
 
-W1 的第一个练手脚本。用法：
-    python w1/gc_content.py w1/sample.fasta
+用法：
+    python seq_tools/gc_content.py seq_tools/sample.fasta
 
-可以试着改的地方（W1 任务）：
+可扩展点：
 1. 加一个参数控制是否只输出最长的序列
 2. 把结果写进 CSV 文件
 3. 处理文件不存在的情况（try/except）

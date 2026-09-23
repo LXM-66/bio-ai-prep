@@ -1,11 +1,11 @@
-"""从 NCBI 拉一批人类 RefSeq mRNA 记录，存成 CSV 供 pandas 分析（W2）。
+"""从 NCBI 拉一批人类 RefSeq mRNA 记录，存成 CSV 供后续 pandas 分析。
 
 用法：
-    python w2/fetch_dataset.py            # 默认 500 条
-    python w2/fetch_dataset.py 200
+    python data_analysis/fetch_dataset.py            # 默认 500 条
+    python data_analysis/fetch_dataset.py 200
 
 产物：
-    w2/data/ncbi_raw.csv   原始表（故意不洗，留着给 pandas 练手）
+    data_analysis/data/ncbi_raw.csv   原始表（刻意保留脏数据，便于复现清洗过程）
 """
 
 import csv

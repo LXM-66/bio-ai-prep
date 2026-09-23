@@ -1,9 +1,9 @@
 """读 FASTA，统计每条序列的名字/长度/GC 含量，写成 CSV。
 
-W1 的第 3 个练手脚本。用法：
-    python w1/fasta_to_csv.py w1/sample.fasta
+用法：
+    python seq_tools/fasta_to_csv.py seq_tools/sample.fasta
 输出：
-    w1/out/stats.csv
+    seq_tools/out/stats.csv
 """
 
 import csv
@@ -17,7 +17,7 @@ OUT = Path(__file__).resolve().parent / "out" / "stats.csv"
 
 def main():
     if len(sys.argv) != 2:
-        print("用法: python w1/fasta_to_csv.py <fasta文件>")
+        print("用法: python seq_tools/fasta_to_csv.py <fasta文件>")
         return 1
 
     src = Path(sys.argv[1])

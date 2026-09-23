@@ -1,8 +1,8 @@
-"""W4：命令行对话脚本 —— 多轮上下文 + 流式输出 + 每次调用的 Token 与花费。
+"""命令行对话脚本 —— 多轮上下文 + 流式输出 + 每次调用的 Token 与花费。
 
 用法：
-    python w4/chat.py                      # 交互式（输入 /exit 退出）
-    echo "用一句话解释什么是 RAG" | python w4/chat.py     # 管道输入也行
+    python llm_client/chat.py                      # 交互式（输入 /exit 退出）
+    echo "用一句话解释什么是 RAG" | python llm_client/chat.py     # 管道输入也行
 
 脚本内命令：
     /cost    本次会话累计花了多少
@@ -75,7 +75,7 @@ def main():
         messages.append({"role": "assistant", "content": reply})
 
     if turns:
-        print(f"\n本次对话 {turns} 轮，合计 {total_cost:.6f} 元（明细已记到 w4/logs/usage.csv）")
+        print(f"\n本次对话 {turns} 轮，合计 {total_cost:.6f} 元（明细已记到 llm_client/logs/usage.csv）")
     return 0
 
 

@@ -1,7 +1,7 @@
 """DeepSeek API 的最小可用封装：流式输出 / 超时 / 重试 / Token 与成本统计。
 
 只用标准库（urllib、json），不引第三方 SDK —— 这样能看清 HTTP 和 SSE 到底发生了什么。
-配合 `w4/chat.py` 使用，后续 W5 的 RAG 原型也直接复用它。
+配合 `llm_client/chat.py` 使用，RAG 模块也直接复用它。
 
 用法：
     from llm import DeepSeek

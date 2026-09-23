@@ -2,7 +2,7 @@
 
 用法（notebook 或脚本里）：
 
-    from viz import apply_style, save, PALETTE
+    from common.viz import apply_style, save, PALETTE
     apply_style()
     fig, ax = plt.subplots(...)
     save(fig, OUT / "fig1.png")

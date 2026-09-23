@@ -1,12 +1,12 @@
 """给前 N 条记录补上真实 GC 含量（其余记录留空，故意制造缺失值给 pandas 练手）。
 
 用法：
-    python w2/add_gc.py            # 默认全量 500 条
-    python w2/add_gc.py 60         # 只补前 60 条
+    python data_analysis/add_gc.py            # 默认全量 500 条
+    python data_analysis/add_gc.py 60         # 只补前 60 条
 
 产物：
-    w2/data/gc_partial.csv      accession,gc（只有 N 行）
-    w2/data/gc_seqs.fasta       下载到的序列（缓存）
+    data_analysis/data/gc_partial.csv      accession,gc（只有 N 行）
+    data_analysis/data/gc_seqs.fasta       下载到的序列（缓存）
 """
 
 import csv
@@ -16,7 +16,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "w1"))          # 复用 W1 写的函数
+sys.path.insert(0, str(ROOT / "seq_tools"))          # 复用 seq_tools 里的函数
 from gc_content import gc_content, read_fasta  # noqa: E402
 
 DATA = Path(__file__).resolve().parent / "data"

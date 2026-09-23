@@ -1,12 +1,12 @@
 """从 NCBI 拉取真实序列（无需 API key），统计后写入 CSV。
 
 用法：
-    python w1/fetch_ncbi.py NC_001807
-    python w1/fetch_ncbi.py NM_000546 --start 1 --stop 600
+    python seq_tools/fetch_ncbi.py NC_001807
+    python seq_tools/fetch_ncbi.py NM_000546 --start 1 --stop 600
 
 产物：
-    w1/out/<编号>.fasta     原始序列（缓存，便于复跑）
-    w1/out/ncbi_stats.csv   统计结果
+    seq_tools/out/<编号>.fasta     原始序列（缓存，便于复跑）
+    seq_tools/out/ncbi_stats.csv   统计结果
 """
 
 import csv
@@ -37,7 +37,7 @@ def fetch_fasta(acc, start=None, stop=None):
 
 def main():
     if len(sys.argv) < 2:
-        print("用法: python w1/fetch_ncbi.py <NCBI编号> [--start N --stop M]")
+        print("用法: python seq_tools/fetch_ncbi.py <NCBI编号> [--start N --stop M]")
         return 1
 
     acc = sys.argv[1]

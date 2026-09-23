@@ -12,6 +12,6 @@ venv/
 *.key
 *.log
 data/raw/
-w1/out/*.fasta
-w2/data/*.fasta
-w5/index/
+seq_tools/out/*.fasta
+data_analysis/data/*.fasta
+rag/index/
