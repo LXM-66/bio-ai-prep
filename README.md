@@ -126,7 +126,7 @@ bio-ai-prep/
 └── requirements.txt · .env.example · LICENSE
 ```
 
-## 设计取舍（都是被实际问题逼出来的）
+## 设计取舍
 
 | 决定 | 为什么 |
 |---|---|
