@@ -1,0 +1,53 @@
+"""给前 N 条记录补上真实 GC 含量（其余记录留空，故意制造缺失值给 pandas 练手）。
+
+用法：
+    python w2/add_gc.py [N]        # 默认 60
+
+产物：
+    w2/data/gc_partial.csv      accession,gc（只有 N 行）
+    w2/data/gc_seqs.fasta       下载到的序列（缓存）
+"""
+
+import csv
+import sys
+import urllib.request
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "w1"))          # 复用 W1 写的函数
+from gc_content import gc_content, read_fasta  # noqa: E402
+
+DATA = Path(__file__).resolve().parent / "data"
+EFETCH = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+
+
+def fetch_many(accessions):
+    """一次请求拿多条序列（NCBI 允许 id 用逗号分隔）。"""
+    url = (f"{EFETCH}?db=nuccore&rettype=fasta&retmode=text"
+           f"&id={','.join(accessions)}")
+    req = urllib.request.Request(url, headers={"User-Agent": "w2-learning-script"})
+    return urllib.request.urlopen(req, timeout=60).read().decode("utf-8")
+
+
+def main():
+    n = int(sys.argv[1]) if len(sys.argv) > 1 else 60
+    rows = list(csv.DictReader((DATA / "ncbi_raw.csv").open(encoding="utf-8")))
+    wanted = [r["accession"] for r in rows[:n]]
+
+    fasta_path = DATA / "gc_seqs.fasta"
+    fasta_path.write_text(fetch_many(wanted), encoding="utf-8")
+
+    seqs = read_fasta(fasta_path)
+    out = DATA / "gc_partial.csv"
+    with out.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["accession", "gc"])
+        for name, seq in seqs.items():
+            w.writerow([name.split()[0], round(gc_content(seq), 4)])
+
+    print(f"请求 {len(wanted)} 条，拿到 {len(seqs)} 条 → {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

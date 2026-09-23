@@ -13,3 +13,4 @@ venv/
 *.log
 data/raw/
 w1/out/*.fasta
+w2/data/*.fasta
