@@ -5,7 +5,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.14-4C8BF5)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-59C3A5)](LICENSE)
-![tests](https://img.shields.io/badge/tests-18%20passed-59C3A5)
+[![tests](https://github.com/LXM-66/bio-ai-prep/actions/workflows/tests.yml/badge.svg)](https://github.com/LXM-66/bio-ai-prep/actions/workflows/tests.yml)
 
 ```
 问题：DNA 错配修复蛋白的功能是什么？

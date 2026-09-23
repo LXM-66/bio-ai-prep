@@ -2,11 +2,17 @@
 
 用 Streamlit 官方的 AppTest 在无浏览器环境下执行整份脚本 —— 比"手动打开网页看一眼"
 可靠，因为它在 CI 或纯命令行里也能跑。
+
+没装 streamlit 的环境（比如只装 pytest 的最小 CI）会跳过这一项，而不是报失败。
 """
 
 from pathlib import Path
 
-from streamlit.testing.v1 import AppTest
+import pytest
+
+pytest.importorskip("streamlit", reason="未安装 streamlit，跳过界面冒烟测试")
+
+from streamlit.testing.v1 import AppTest      # noqa: E402
 
 APP = Path(__file__).resolve().parent.parent / "ui" / "app.py"
 
