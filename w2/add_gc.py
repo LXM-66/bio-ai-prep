@@ -1,7 +1,7 @@
 """给前 N 条记录补上真实 GC 含量（其余记录留空，故意制造缺失值给 pandas 练手）。
 
 用法：
-    python w2/add_gc.py [N]        # 默认 60
+    python w2/add_gc.py500 [N]       
 
 产物：
     w2/data/gc_partial.csv      accession,gc（只有 N 行）
