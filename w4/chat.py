@@ -16,25 +16,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from llm import DeepSeek, DeepSeekError, is_peak  # noqa: E402
+from llm import DeepSeek, DeepSeekError, is_peak, load_env  # noqa: E402
 
 SYSTEM = ("你是生物医药领域的助手。回答简洁准确，涉及专业概念时给一句通俗解释，"
           "不确定的地方要说明不确定。")
-
-ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
-
-
-def load_env():
-    """把 .env 里的 KEY=VALUE 读进环境变量（已存在的环境变量优先）。"""
-    import os
-    if not ENV_FILE.exists():
-        return
-    for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        k, v = line.split("=", 1)
-        os.environ.setdefault(k.strip(), v.strip())
 
 
 def main():

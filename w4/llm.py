@@ -25,6 +25,20 @@ from pathlib import Path
 BASE_URL = "https://api.deepseek.com"
 DEFAULT_MODEL = "deepseek-flash"            # 旧名 deepseek-v4-flash 也能调用
 LOG = Path(__file__).resolve().parent / "logs" / "usage.csv"
+ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
+
+
+def load_env(path: Path | None = None) -> None:
+    """把 .env 里的 KEY=VALUE 读进环境变量（已存在的环境变量优先）。"""
+    path = path or ENV_FILE
+    if not Path(path).exists():
+        return
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip())
 
 # 官方价目表（元 / 百万 tokens）
 # 来源：https://api-docs.deepseek.com/zh-cn/quick_start/pricing
