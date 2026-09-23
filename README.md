@@ -78,6 +78,13 @@ bio-ai-prep/
     ├── llm.py                 封装：SSE 流式 / 超时 / 指数退避重试 / 计价
     ├── chat.py                命令行多轮对话（/cost /reset /exit）
     └── logs/usage.csv         每次调用的 token 与花费流水
+└── w5/                    RAG 文档问答：检索 + 带引用回答
+    ├── fetch_pubmed.py        拉 PubMed 摘要作语料（真实生物医药文本）
+    ├── text.py                切分（句子边界 + 重叠）与中英混合分词
+    ├── store.py               BM25 索引：建索引 / 检索 / 存取
+    ├── build_index.py         切块建索引 → w5/index/bm25.json
+    ├── ask.py                 提问 → 检索 → 带引用回答（call W4 的 llm.py）
+    └── data/pubmed.jsonl      语料：100 篇摘要（已入库）
 ```
 
 ## w4 脚本（接大模型 API：流式 / 重试 / 成本）
@@ -104,6 +111,32 @@ python w4/chat.py           # 多轮对话：流式输出，每轮显示 token �
 4. **成本**：按[官方价目表](https://api-docs.deepseek.com/zh-cn/quick_start/pricing)自动判断高峰/空闲（空闲时段半价），并区分**缓存命中**与**未命中**分别计价 —— 上面第 3、4 行就是缓存把同一段长前缀变便宜 69% 的实测。
 
 每次调用都会往 `w4/logs/usage.csv` 追加一行（时间、模型、token、是否高峰、花费、耗时），方便回看"这个月花了多少"。
+
+## w5 脚本（RAG 文档问答：检索 + 带引用回答）
+
+```bash
+python w5/fetch_pubmed.py 100 "single-cell RNA sequencing AND cancer"  # 拉 100 篇 PubMed 摘要
+python w5/build_index.py                                              # 切分 + 建索引
+python w5/ask.py "单细胞测序怎么用来研究肿瘤内部的细胞异质性？"          # 提问 → 检索 → 带引用回答
+python w5/ask.py --search-only "spatial transcriptomics tumor"         # 只看检索结果
+```
+
+实测（2026-09-23，语料 = 100 篇 PubMed 摘要 → 442 块 / 4,670 个词）：
+
+| 环节 | 结果 |
+|---|---|
+| 英文检索 | top1 = PMID 40804688（BM25 10.94），top5 全部相关 |
+| 中文提问 | 自动改写成英文关键词（`single-cell sequencing tumor intratumoral heterogeneity cancer scRNA-seq`）再检索 |
+| 生成回答 | 逐句带 [1]–[5] 引用｜673 + 1115 tokens｜5.55 s｜**0.005133 元** |
+| 边界测试（问语料里没有的） | 回答「资料里没有提到 CRISPR 碱基编辑在玉米育种中的应用效果」—— **没编** |
+
+调参实测（同一个 query，只改块长）：块长 600 时 top5 来自 4 篇不同论文；改成 400 后分数更高（11.37 vs 10.94），但 top5 里有 3 块来自同一篇 —— **分数涨了，多样性掉了**。所以块长不是越小越好。
+
+三个设计取舍：
+
+1. **为什么先用 BM25 而不是向量**：DeepSeek 没有 embedding 接口，本地向量模型要下几百 MB。BM25 零依赖、可解释；要换成语义检索，只需重写 `w5/store.py` 里的 `search()`，上层代码不动。
+2. **中文问、英文语料**：词面检索下中文词在索引里根本不存在，所以提问后先让模型把问题改写成英文关键词（`rewrite_query`）—— 这是跨语言 RAG 绕不开的一步。
+3. **切分带重叠**：按句子边界切、相邻块重叠 100 字符，避免答案正好落在切口上。
 
 ## 数据来源与调用礼节
 
@@ -133,7 +166,8 @@ python w4/chat.py           # 多轮对话：流式输出，每轮显示 token �
 - [x] **W2** pandas + 真实数据表清洗 + 4 张图
 - [x] **W3** 整理成可分享的项目页（本 README + notebook + 统一出图规范）
 - [x] **W4** 接大模型 API：流式输出、异常重试、超时、Token 与成本统计
-- [ ] **W5–W6** RAG 文档问答原型 + 灌入生物医药真实数据
+- [x] **W5** RAG 文档问答原型：PubMed 真实语料 + 切分 + 检索 + 带引用回答
+- [ ] **W6** 扩到多源真实数据（序列 / 结构 / 表达谱）并提高检索质量
 - [ ] **W7–W9** 评测集、成本/延迟实测、PRD 与用户反馈
 - [ ] **W10–W12** 双版简历、Demo 视频、投递与模拟面试
 
