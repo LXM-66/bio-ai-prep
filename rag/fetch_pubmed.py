@@ -1,11 +1,11 @@
 """从 PubMed 拉一批摘要，作为 RAG 的语料（真实生物医药文本）。
 
 用法：
-    python w5/fetch_pubmed.py                       # 默认主题、100 篇
-    python w5/fetch_pubmed.py 150 "single-cell RNA sequencing cancer"
+    python rag/fetch_pubmed.py                       # 默认主题、100 篇
+    python rag/fetch_pubmed.py 150 "single-cell RNA sequencing cancer"
 
 产物：
-    w5/data/pubmed.jsonl    每行一篇：pmid / title / abstract / journal / year
+    rag/data/pubmed.jsonl    每行一篇：pmid / title / abstract / journal / year
 """
 
 import json
@@ -17,6 +17,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+EFETCH = f"{EUTILS}/efetch.fcgi"
+ESEARCH = f"{EUTILS}/esearch.fcgi"
 DATA = Path(__file__).resolve().parent / "data"
 OUT = DATA / "pubmed.jsonl"
 DEFAULT_QUERY = "single-cell RNA sequencing AND cancer"
@@ -35,9 +37,14 @@ def fetch(url, timeout=90, retries=3):
             time.sleep(3 * attempt)
 
 
-def search_pmids(query, limit):
-    url = f"{EUTILS}/esearch.fcgi?" + urllib.parse.urlencode(
-        {"db": "pubmed", "term": query, "retmax": limit, "retmode": "json", "sort": "relevance"})
+def search_pmids(query, limit, days=None, sort="relevance"):
+    """按关键词（可加最近 N 天的时间窗）取 PMID 列表。"""
+    params = {"db": "pubmed", "term": query, "retmax": limit, "retmode": "json", "sort": sort}
+    if days:
+        from datetime import date, timedelta
+        params.update({"datetype": "pdat", "mindate": (date.today() - timedelta(days=days)).isoformat(),
+                       "maxdate": date.today().isoformat()})
+    url = f"{ESEARCH}?" + urllib.parse.urlencode(params)
     data = json.loads(fetch(url).decode("utf-8"))
     result = data["esearchresult"]
     print(f"命中 {int(result['count']):,} 篇，本次取 {len(result['idlist'])} 篇")
@@ -75,7 +82,7 @@ def main():
     articles = []
     for i in range(0, len(pmids), 50):                 # 每批 50 篇，中间停 0.5s
         batch = pmids[i:i + 50]
-        url = f"{EUTILS}/efetch.fcgi?" + urllib.parse.urlencode(
+        url = f"{EFETCH}?" + urllib.parse.urlencode(
             {"db": "pubmed", "id": ",".join(batch), "rettype": "abstract", "retmode": "xml"})
         articles.extend(parse_articles(fetch(url)))
         print(f"  批次 {i // 50 + 1}：已解析 {len(articles)} 篇")

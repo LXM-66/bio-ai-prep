@@ -35,12 +35,20 @@ def chunk_text(text, size=600, overlap=100):
 
 
 def tokenize(text):
-    """中英混合的极简分词：英文/数字按词，中文按单字。
+    """中英混合的极简分词：英文/数字按词，中文按**二元组（bigram）**。
 
-    BM25 只认"词"，所以这一步决定检索能不能命中。中文没有空格，
-    这里用单字做最粗的切分（够用；要更好就上 jieba）。
+    为什么中文不用单字：单字会产生大量假匹配 —— 测试里实测到「碱基编辑」会和
+    「基因」共享一个「基」字，于是毫不相关的问题也能召回文献。改成相邻两字成词
+    （碱基 / 基编 / 编辑）后，这种噪声基本消失，实现只多两行。
+
+    BM25 只认"词"，所以这一步直接决定检索质量。要更准可以换 jieba 之类的分词器，
+    但 bigram 是零依赖方案里性价比最高的一档。
     """
     text = text.lower()
-    tokens = re.findall(r"[a-z0-9][a-z0-9\-\.]*", text)      # 英文/数字
-    tokens += re.findall(r"[\u4e00-\u9fff]", text)           # 中文单字
+    tokens = re.findall(r"[a-z0-9][a-z0-9\-\.]*", text)        # 英文/数字整体成词
+    for run in re.findall(r"[\u4e00-\u9fff]+", text):          # 每一段连续中文
+        if len(run) == 1:
+            tokens.append(run)
+        else:
+            tokens.extend(run[i:i + 2] for i in range(len(run) - 1))
     return tokens

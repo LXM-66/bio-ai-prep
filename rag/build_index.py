@@ -1,11 +1,11 @@
-"""把 w5/data/pubmed.jsonl 切块、建 BM25 索引、存盘。
+"""把 rag/data/pubmed.jsonl 切块、建 BM25 索引、存盘。
 
 用法：
-    python w5/build_index.py                      # 默认块长 600、重叠 100
-    python w5/build_index.py --size 400 --overlap 80
+    python rag/build_index.py                      # 默认块长 600、重叠 100
+    python rag/build_index.py --size 400 --overlap 80
 
 产物：
-    w5/index/bm25.json    索引（含切好的块、词频、文档频率）
+    rag/index/bm25.json    索引（含切好的块、词频、文档频率）
 """
 
 import argparse
@@ -29,7 +29,7 @@ def main():
 
     src = DATA / "pubmed.jsonl"
     if not src.exists():
-        print(f"找不到语料 {src}，先跑：python w5/fetch_pubmed.py")
+        print(f"找不到语料 {src}，先跑：python rag/fetch_pubmed.py")
         return 1
 
     articles = [json.loads(line) for line in src.read_text(encoding="utf-8").splitlines() if line.strip()]
