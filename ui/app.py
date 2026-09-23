@@ -129,7 +129,7 @@ with tab_about:
     if result_path.exists():
         data = json.loads(result_path.read_text(encoding="utf-8"))
         st.caption(f"评测集：{data['题目数']} 道题（由模型从语料反推生成）｜语料 {data['语料块数']} 块")
-        st.dataframe(data["结果"], use_container_width=True, hide_index=True)
+        st.dataframe(data["结果"], width="stretch", hide_index=True)
     else:
         st.info("还没有评测结果，先跑：python rag/eval.py")
     st.caption("检索指标只用于横向比较改动（换分词、换块长、换检索算法），不代表绝对准确率。")

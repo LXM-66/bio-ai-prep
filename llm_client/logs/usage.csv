@@ -78,3 +78,5 @@ ts,model,prompt_tokens,cache_hit_tokens,completion_tokens,peak,cost_cny,seconds
 2026-09-23T14:27:38,deepseek-flash,70,0,2807,True,0.011298,13.43
 2026-09-23T14:27:51,deepseek-flash,70,0,2459,True,0.009906,12.7
 2026-09-23T14:27:55,deepseek-flash,74,0,835,True,0.003414,4.54
+2026-09-23T14:42:10,deepseek-flash,64,0,558,True,0.002296,3.18
+2026-09-23T14:42:17,deepseek-flash,741,512,1428,True,0.005951,6.9
