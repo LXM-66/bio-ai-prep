@@ -3,9 +3,9 @@
 一个面向生物医药场景的检索增强问答系统，外加配套的数据处理工具链。
 **输入一个问题 → 检索真实文献 → 给出带 PMID 引用的中文回答**；资料里没有的内容它会直说不确定，不编。
 
+[![tests](https://github.com/LXM-66/bio-ai-prep/actions/workflows/tests.yml/badge.svg)](https://github.com/LXM-66/bio-ai-prep/actions/workflows/tests.yml)
 [![Python](https://img.shields.io/badge/Python-3.14-4C8BF5)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-59C3A5)](LICENSE)
-![tests](https://img.shields.io/badge/tests-17%20passed-59C3A5)
 
 ```
 问题：单细胞测序怎么用来研究肿瘤内部的细胞异质性？
