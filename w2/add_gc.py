@@ -1,7 +1,7 @@
 """给前 N 条记录补上真实 GC 含量（其余记录留空，故意制造缺失值给 pandas 练手）。
 
 用法：
-    python w2/add_gc.py500 [N]       
+    python w2/add_gc.py [N]       
 
 产物：
     w2/data/gc_partial.csv      accession,gc（只有 N 行）
@@ -39,7 +39,7 @@ def fetch_many(accessions, chunk=100):
 
 
 def main():
-    n = int(sys.argv[1]) if len(sys.argv) > 1 else 60
+    n = int(sys.argv[1]) if len(sys.argv) > 1 500 else 60
     rows = list(csv.DictReader((DATA / "ncbi_raw.csv").open(encoding="utf-8")))
     wanted = [r["accession"] for r in rows[:n]]
 
