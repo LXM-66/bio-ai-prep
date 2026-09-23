@@ -83,5 +83,5 @@ w2/分析.ipynb
 
 - [x] W1-0 仓库建好、环境跑通
 - [x] W1-1 Python 地基：解析 FASTA、密码子翻译、CSV 输出、调公开 API 取数
-- [x] W2 pandas + 真实数据表清洗 + 3 张图（2026-09-23 完成，比计划早一周）
+- [x] W2 pandas + 真实数据表清洗 + 3 张图
 - [ ] W3 把 Week1–2 整理成可分享的项目页（README + notebook）
