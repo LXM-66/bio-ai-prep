@@ -49,7 +49,7 @@ streamlit run ui/app.py            # → http://localhost:8501
 # 其他
 python llm_client/chat.py           # 命令行多轮对话（/cost /reset /exit）
 python data_analysis/fetch_dataset.py 500 && python data_analysis/add_gc.py
-.venv/Scripts/python.exe -m pytest tests -q     # 18 passed
+.venv/Scripts/python.exe -m pytest tests -q     # 19 passed
 ```
 
 ## 实测结果
@@ -122,7 +122,7 @@ bio-ai-prep/
 ├── data_analysis/          真实数据清洗与可视化（notebook 含真实输出）
 ├── seq_tools/              序列处理基础工具（纯标准库）
 ├── common/viz.py           统一出图规范：字体/配色/边框/dpi
-├── tests/                  18 项测试（切分、分词、检索、序列算法、界面冒烟）
+├── tests/                  19 项测试（切分、分词、检索、序列算法、界面冒烟）
 └── requirements.txt · .env.example · LICENSE
 ```
 
@@ -145,7 +145,7 @@ bio-ai-prep/
 ## 测试
 
 ```bash
-.venv/Scripts/python.exe -m pytest tests -q     # 18 passed
+.venv/Scripts/python.exe -m pytest tests -q     # 19 passed
 ```
 
 - `test_text.py`：切分预算、句子边界、中英混合分词、bigram 不跨标点
