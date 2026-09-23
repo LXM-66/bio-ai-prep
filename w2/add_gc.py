@@ -10,6 +10,7 @@
 
 import csv
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
@@ -21,12 +22,20 @@ DATA = Path(__file__).resolve().parent / "data"
 EFETCH = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 
 
-def fetch_many(accessions):
-    """一次请求拿多条序列（NCBI 允许 id 用逗号分隔）。"""
-    url = (f"{EFETCH}?db=nuccore&rettype=fasta&retmode=text"
-           f"&id={','.join(accessions)}")
-    req = urllib.request.Request(url, headers={"User-Agent": "w2-learning-script"})
-    return urllib.request.urlopen(req, timeout=60).read().decode("utf-8")
+def fetch_many(accessions, chunk=100):
+    """分批拿序列：URL 有长度上限，几百条要拆成几次请求，批次之间停 0.4s 守礼节。"""
+    total = -(-len(accessions) // chunk)          # 向上取整
+    parts = []
+    for i in range(0, len(accessions), chunk):
+        batch = accessions[i:i + chunk]
+        url = (f"{EFETCH}?db=nuccore&rettype=fasta&retmode=text"
+               f"&id={','.join(batch)}")
+        req = urllib.request.Request(url, headers={"User-Agent": "w2-learning-script"})
+        parts.append(urllib.request.urlopen(req, timeout=120).read().decode("utf-8"))
+        print(f"  批次 {i // chunk + 1}/{total}：{len(batch)} 条")
+        if i + chunk < len(accessions):
+            time.sleep(0.4)
+    return "".join(parts)
 
 
 def main():
