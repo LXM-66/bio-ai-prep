@@ -7,6 +7,9 @@
 [![License](https://img.shields.io/badge/License-MIT-59C3A5)](LICENSE)
 [![tests](https://github.com/LXM-66/bio-ai-prep/actions/workflows/tests.yml/badge.svg)](https://github.com/LXM-66/bio-ai-prep/actions/workflows/tests.yml)
 
+**🔗 在线体验**：<https://bio-ai-prep-lmb26xzir6unzudyobsu6x.streamlit.app/> —— 打开就能提问，不需要任何配置。
+（免费实例长期无人访问会休眠，首次打开等十几秒唤醒即可。）
+
 ```
 问题：DNA 错配修复蛋白的功能是什么？
 检索式（自动改写）：DNA mismatch repair protein function
