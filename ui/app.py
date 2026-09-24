@@ -18,8 +18,17 @@ for sub in ("rag", "llm_client"):
     sys.path.insert(0, str(ROOT / sub))
 
 import json                                    # noqa: E402
+import os                                      # noqa: E402
 
 import streamlit as st                         # noqa: E402
+
+# 云端部署：把 Streamlit Secrets 注入环境变量。
+# llm_client/llm.py 从 os.environ 读 DEEPSEEK_API_KEY；本地靠 .env，线上靠 Secrets。
+try:
+    if "DEEPSEEK_API_KEY" in st.secrets:
+        os.environ.setdefault("DEEPSEEK_API_KEY", st.secrets["DEEPSEEK_API_KEY"])
+except Exception:
+    pass  # 本地没有 secrets.toml 时静默跳过
 
 from pipeline import REPORT_DIR, Engine, corpus_overview   # noqa: E402
 

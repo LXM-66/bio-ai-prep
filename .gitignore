@@ -14,4 +14,4 @@ venv/
 data/raw/
 seq_tools/out/*.fasta
 data_analysis/data/*.fasta
-rag/index/
+# rag/index/ 刻意提交：云端部署（Streamlit Cloud）需要现成索引，避免首次访问时重建
